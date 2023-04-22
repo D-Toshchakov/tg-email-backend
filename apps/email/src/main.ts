@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { EmailModule } from './email.module';
-import { RmqService } from 'libs/common';
+import { RmqService } from 'libs/common/src';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
