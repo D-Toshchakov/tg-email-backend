@@ -1,4 +1,20 @@
 services:
+  email:
+    build: 
+      context: .
+      dockerfile: ./apps/email/Dockerfile
+      target: development
+    command: npm run start:dev email
+    env_file:
+      - ./apps/email/.env
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/apps/node_modules
+    ports:
+      - '3000:3000'
+
   rabbitmq:
     image: rabbitmq:management
     volumes:
