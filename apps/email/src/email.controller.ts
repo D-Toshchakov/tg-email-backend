@@ -5,8 +5,8 @@ import { EmailService } from './email.service';
 export class EmailController {
   constructor(private readonly emailService: EmailService) {}
 
-  @Get()
-  getHello(): string {
+  @Get('listen')
+  getHello() {
     return this.emailService.getHello();
   }
 }

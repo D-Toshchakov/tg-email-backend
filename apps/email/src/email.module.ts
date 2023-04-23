@@ -4,9 +4,11 @@ import { EmailService } from './email.service';
 import { ConfigModule } from '@nestjs/config';
 import { RmqModule } from 'libs/common/src';
 import * as Joi from 'joi';
+import { TELEGRAM_BOT_SERVICE } from './constants/services';
 
 @Module({
-  imports: [ConfigModule.forRoot({
+  imports: [
+    ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
         RABBIT_MQ_URI: Joi.string().required(),
@@ -15,9 +17,9 @@ import * as Joi from 'joi';
       }),
       envFilePath: './apps/email/.env'
     }),
-    RmqModule,
+    RmqModule.register({ name: TELEGRAM_BOT_SERVICE }),
   ],
   controllers: [EmailController],
   providers: [EmailService],
 })
-export class EmailModule {}
+export class EmailModule { }

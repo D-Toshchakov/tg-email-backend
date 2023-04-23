@@ -15,6 +15,21 @@ services:
     ports:
       - '3000:3000'
 
+  bot:
+    build: 
+      context: .
+      dockerfile: ./apps/bot/Dockerfile
+      target: development
+    command: npm run start:dev bot
+    env_file:
+      - ./apps/bot/.env
+    depends_on:
+      - email
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/apps/node_modules
+
   rabbitmq:
     image: rabbitmq:management
     volumes:
