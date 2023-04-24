@@ -5,6 +5,9 @@ import { RmqModule } from 'libs/common/src';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi'
 import { TELEGRAM_BOT_SERVICE } from './constants/services';
+import { TelegrafModule } from 'nestjs-telegraf';
+import { AppUpdate } from './bot.update';
+import { sessionMiddleware } from './middleware/middleware';
 
 @Module({
   imports: [
@@ -15,9 +18,15 @@ import { TELEGRAM_BOT_SERVICE } from './constants/services';
         RABBIT_MQ_TELEGRAM_QUEUE: Joi.string().required(),
       })
     }),
-    RmqModule.register({name: TELEGRAM_BOT_SERVICE}),
+    TelegrafModule.forRoot({
+      botName: 'EmailNotifierBot',
+      token: process.env.TOKEN,
+      middlewares: [sessionMiddleware],
+    }),
+    RmqModule.register({ name: TELEGRAM_BOT_SERVICE }),
+    AppUpdate,
   ],
   controllers: [BotController],
   providers: [BotService],
 })
-export class BotModule {}
+export class BotModule { }

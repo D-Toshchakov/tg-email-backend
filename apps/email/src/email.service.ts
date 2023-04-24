@@ -8,7 +8,7 @@ export class EmailService {
   constructor(@Inject(TELEGRAM_BOT_SERVICE) private emailClient: ClientProxy) { }
 
   async getHello(): Promise<string> {
-    await lastValueFrom(this.emailClient.emit('new_message', {text: 'some text'}))
+    await lastValueFrom(this.emailClient.emit('new_message', {text: 'new text'}))
     // const record = new RmqRecordBuilder('some text')
     //   .setOptions({
     //     priority: 3,

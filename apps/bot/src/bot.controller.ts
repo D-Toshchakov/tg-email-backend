@@ -1,10 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
 import { BotService } from './bot.service';
-import { Ctx, EventPattern, MessagePattern, Payload, RmqContext } from '@nestjs/microservices';
+import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices';
+import { InjectBot } from 'nestjs-telegraf';
+import { Telegraf } from 'telegraf';
 
 @Controller()
 export class BotController {
-  constructor(private readonly botService: BotService) {}
+  constructor(private readonly botService: BotService, @InjectBot('EmailNotifierBot') private bot: Telegraf) {}
 
   @Get()
   getHello(): string {
@@ -12,7 +14,14 @@ export class BotController {
   }
 
   @MessagePattern('new_message')
-  handleNewMessage(@Payload() data: any, @Ctx() context: RmqContext) {
+  async handleNewMessage(@Payload() data: any, @Ctx() context: RmqContext) {
+
+    const channel = context.getChannelRef();
+    const originalMsg = context.getMessage();
+    console.log(originalMsg);
+    
+    const msg = await this.bot.telegram.sendMessage('-618656969', data)
+    channel.ack(originalMsg);
     console.log(data);
   }
 }
